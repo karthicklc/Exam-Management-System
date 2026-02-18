@@ -18,8 +18,13 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load environment variables from .env in BASE_DIR
-load_dotenv(BASE_DIR / '.env')
+# Load environment variables: example first, then local .env to override
+env_example = BASE_DIR / '.env.example'
+env_local = BASE_DIR / '.env'
+if env_example.exists():
+    load_dotenv(env_example)
+if env_local.exists():
+    load_dotenv(env_local)
 
 
 # Quick-start development settings - unsuitable for production
