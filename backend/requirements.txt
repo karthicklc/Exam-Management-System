@@ -1,0 +1,7 @@
+Django>=6.0,<7
+django-cors-headers
+gunicorn
+mysqlclient
+whitenoise
+python-dotenv
+dj-database-url
