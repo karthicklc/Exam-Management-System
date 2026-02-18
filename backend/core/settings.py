@@ -26,6 +26,16 @@ if env_example.exists():
 if env_local.exists():
     load_dotenv(env_local)
 
+# If DATABASE_URL isn't provided, try to construct it from SUPABASE_* parts
+if not os.getenv('DATABASE_URL'):
+    supa_user = os.getenv('SUPABASE_DB_USER') or os.getenv('DB_USER')
+    supa_pass = os.getenv('SUPABASE_DB_PASSWORD') or os.getenv('DB_PASSWORD')
+    supa_host = os.getenv('SUPABASE_DB_HOST') or os.getenv('DB_HOST')
+    supa_port = os.getenv('SUPABASE_DB_PORT') or os.getenv('DB_PORT')
+    supa_name = os.getenv('SUPABASE_DB_NAME') or os.getenv('DB_NAME')
+    if supa_user and supa_pass and supa_host and supa_port and supa_name:
+        os.environ['DATABASE_URL'] = f"postgres://{supa_user}:{supa_pass}@{supa_host}:{supa_port}/{supa_name}"
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -93,9 +103,22 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
-}
+_dj_db = dj_database_url.config(conn_max_age=600, ssl_require=True)
+if _dj_db:
+    DATABASES = {'default': _dj_db}
+else:
+    # Fallback to individual SUPABASE_* variables if DATABASE_URL isn't set
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('SUPABASE_DB_NAME') or os.getenv('DB_NAME'),
+            'USER': os.getenv('SUPABASE_DB_USER') or os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('SUPABASE_DB_PASSWORD') or os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('SUPABASE_DB_HOST') or os.getenv('DB_HOST'),
+            'PORT': os.getenv('SUPABASE_DB_PORT') or os.getenv('DB_PORT'),
+            'OPTIONS': {'sslmode': 'require'},
+        }
+    }
 
 
 
