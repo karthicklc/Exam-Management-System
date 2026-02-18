@@ -5,14 +5,14 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-# System dependencies for mysqlclient and general build tools
+# System dependencies for Postgres client build and general build tools
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-       build-essential \
-       default-libmysqlclient-dev \
-       gcc \
-       curl \
-    && rm -rf /var/lib/apt/lists/*
+     && apt-get install -y --no-install-recommends \
+         build-essential \
+         libpq-dev \
+         gcc \
+         curl \
+     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip && pip install -r /app/requirements.txt
