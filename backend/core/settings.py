@@ -47,7 +47,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-e8hx^nz&j8o7_%8(bh-&q1rh6!
 DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 'yes')
 
 # Allow localhost for dev, and common Render domain patterns
-DEFAULT_ALLOWED = ['localhost', '127.0.0.1', '*.onrender.com', 'exam-management-system-hk80.onrender.com']
+DEFAULT_ALLOWED = ['localhost', '127.0.0.1', '*.onrender.com', 'exam-management-system-hk80.onrender.com', 'exam-management-system-1-li6t.onrender.com']
 ALLOWED_HOSTS = [h for h in os.getenv('ALLOWED_HOSTS', ','.join(DEFAULT_ALLOWED)).split(',') if h]
 
 
